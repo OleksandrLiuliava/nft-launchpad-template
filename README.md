@@ -177,6 +177,45 @@ npx hardhat run scripts/deploy.ts --network localhost
 cd client && npm run dev
 ```
 
+## 🔐 Whitelist Setup (Merkle Tree)
+
+### 1. Create Whitelist
+
+Create `metadata/whitelist.json` with your whitelisted addresses:
+
+```json
+[
+  "0x1234567890123456789012345678901234567890",
+  "0x2345678901234567890123456789012345678901",
+  "0x3456789012345678901234567890123456789012"
+]
+```
+
+### 2. Generate Merkle Tree
+
+```bash
+npx ts-node scripts/generate-merkle-tree.ts
+```
+
+This will:
+- Generate Merkle root for your smart contract
+- Create individual proofs for each address
+- Save to `metadata/output/merkle-root.json` and `metadata/output/whitelist-proofs.json`
+
+### 3. Set Merkle Root in Contract
+
+```typescript
+const root = "0x..."; // From merkle-root.json
+await contract.setMerkleRoot(root);
+```
+
+### 4. Use Proofs in Frontend
+
+```typescript
+const proof = ["0x...", "0x..."]; // From whitelist-proofs.json
+await contract.whitelistMint(1, proof, { value: mintPrice });
+```
+
 ## 📸 IPFS Metadata Upload
 
 ### 1. Prepare Images
@@ -258,6 +297,7 @@ Or visit the `/gallery` page in the frontend.
 | `npm run verify:sepolia` | Verify on Etherscan |
 | `npm run mint:test` | Test mint from CLI |
 | `npm run upload:pinata` | Upload images to IPFS |
+| `npm run generate:merkle` | Generate Merkle tree for whitelist |
 | `npm run client:dev` | Start frontend dev server |
 | `npm run client:build` | Build frontend for production |
 
