@@ -1,0 +1,11 @@
+node_modules/
+.env
+cache/
+artifacts/
+typechain-types/
+coverage/
+client/node_modules/
+client/dist/
+metadata/output/
+.DS_Store
+*.log
